@@ -26,7 +26,7 @@ export default function About() {
           <h1>{user.id}</h1>
           <h1>{user.name}</h1>
           <h1>{user.age}</h1>
-        </React.Fragment>
+      </React.Fragment>
       ))}
     </div>
   );
