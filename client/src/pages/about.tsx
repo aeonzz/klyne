@@ -11,7 +11,7 @@ export default function About() {
   const [data, setData] = React.useState<User[] | null>(null);
   React.useEffect(() => {
     const wtf = async () => {
-      const tangina = await axios.get("http://localhost:8080/api/v1/users/all");
+      const tangina = await axios.get("http://localhost:8000/api/v1/users/all");
       setData(tangina.data);
       return tangina.data;
     };

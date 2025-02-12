@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { signinCredential, type SigninCredential } from "./_lib/schema";
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Github, Loader2 } from "lucide-react";
+import { Component, Github, Loader2 } from "lucide-react";
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -26,10 +26,9 @@ export default function SignIn() {
   const onSubmit = async (values: SigninCredential) => {
     try {
       const { email, password } = values;
-      await signUp.email({
+      await signIn.email({
         email: email,
         password: password,
-        name: "christian",
         fetchOptions: {
           onRequest: () => {
             setIsLoading(true);
@@ -55,10 +54,10 @@ export default function SignIn() {
 
   return (
     <main className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-semibold tracking-tight">
-            Signin
+          <CardTitle className="flex items-center justify-center text-center text-2xl font-semibold tracking-tight">
+            <Component className="size-8" />
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">

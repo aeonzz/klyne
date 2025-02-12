@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import userRouter from "./routes/user.route";
+import postRouter from "./routes/post.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 
@@ -22,10 +23,11 @@ app.all("/api/auth/*", toNodeHandler(auth));
 
 app.use(express.json());
 
-app.use("/api/users", userRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/posts", postRouter);
 
-app.get('/', async (req: Request, res: Response) => {
-  res.send('Server is working');
+app.get("/", async (req: Request, res: Response) => {
+  res.send("Server is working");
 });
 
 app.listen(port, () => {
