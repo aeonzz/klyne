@@ -32,7 +32,7 @@ export default function UserNav({ session }: UserNavProps) {
           <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[200px]">
+      <DropdownMenuContent align="end" className="min-w-[200px] shadow-none">
         <DropdownMenuLabel className="flex flex-col">
           {session.user.name}
           <span className="text-xs text-muted-foreground">

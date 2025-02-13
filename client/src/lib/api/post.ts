@@ -1,12 +1,34 @@
-import type { CreatePost } from "@/schema/post";
+import type { CreatePost, LikePost } from "@/schema/post";
 import axios from "axios";
 
-async function createPost(payload: CreatePost) {
+export async function createPost(payload: CreatePost) {
   const response = await axios.post(
-    `http://localhost:${process.env.VITE_API_PORT}}/api/v1/posts/create`,
-    payload
+    `${import.meta.env.VITE_API_URL}/api/v1/posts`,
+    payload,
+    {
+      withCredentials: true,
+    }
   );
   return response.data;
 }
 
-export { createPost };
+export async function getPosts() {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_URL}/api/v1/posts`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+export async function likePost(payload: LikePost) {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/v1/posts`,
+    payload,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}

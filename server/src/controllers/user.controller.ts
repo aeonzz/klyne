@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { db } from "../lib/db";
 
-const getAllUsers = async (req: Request, res: Response) => {
+const getUsers = async (req: Request, res: Response) => {
   try {
     const {} = req.body;
     const data = await db.user.findMany();
@@ -12,4 +12,4 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUsers };
+export { getUsers };

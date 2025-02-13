@@ -1,8 +1,13 @@
 import * as express from "express";
-import { createPost } from "../controllers/posts.controller";
+import { createPost, getPosts } from "../controllers/post.controller";
+import authorize from "../middlewares/auth-middleware";
+import { validateData } from "../middlewares/validation-middleware";
+import { createPostSchema } from "../schemas/post.schema";
 
-const router = express.Router();
+const postRouter = express.Router();
 
-router.route("/create").post(createPost);
+postRouter.post("/", authorize, validateData(createPostSchema), createPost);
+postRouter.get("/", authorize, getPosts);
+postRouter.get("/like", authorize, getPosts);
 
-export default router;
+export default postRouter;

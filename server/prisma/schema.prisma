@@ -24,6 +24,8 @@ model User {
   updatedAt     DateTime  @default(now())
   sessions      Session[]
   accounts      Account[]
+  Post          Post[]
+  Like          Like[]
 
   @@unique([email])
   @@map("user")
@@ -79,4 +81,21 @@ model Post {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  likes     Like[]
+
+  @@map("post")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@map("like")
 }
