@@ -1,17 +1,11 @@
 import { getPosts } from "@/lib/api/post";
-import type { Post } from "@/types/post";
 import { useQuery } from "@tanstack/react-query";
 import { CircleAlert, Loader2 } from "lucide-react";
 import PostCard from "./post-card";
-
-type GetPost = {
-  message: string;
-  data: Post[];
-  error: string | null;
-};
+import type { GetPosts } from "@/types/post";
 
 export default function Feed() {
-  const { data, isError, isLoading } = useQuery<GetPost>({
+  const { data, isError, isLoading } = useQuery<GetPosts>({
     queryKey: ["get-posts"],
     queryFn: getPosts,
   });
@@ -46,7 +40,7 @@ export default function Feed() {
   return (
     <>
       {data.data.map((post, index) => (
-        <PostCard key={index} post={post} index={index} />
+        <PostCard key={index} post={post} index={index} queryKey="get-posts" />
       ))}
     </>
   );

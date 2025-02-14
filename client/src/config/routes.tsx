@@ -2,11 +2,12 @@ import AuthLayout from "@/layouts/auth-layout";
 import HomeLayout from "@/layouts/home-layout";
 import ProtectedRoutes from "@/layouts/protected-routes";
 import { getSession } from "@/lib/auth-client";
-import About from "@/pages/about";
 import SignIn from "@/pages/auth/signin";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
-import { createBrowserRouter } from "react-router";
+import PostDetails from "@/pages/post";
+import { createBrowserRouter, Outlet } from "react-router";
+
 
 export const router = createBrowserRouter([
   {
@@ -20,19 +21,34 @@ export const router = createBrowserRouter([
     ),
     loader: async () => {
       const session = await getSession();
-      return session
+      return session;
     },
     hydrateFallbackElement: <div />,
   },
   {
-    path: "/about",
-    element: (
-      <ProtectedRoutes>
-        <HomeLayout>
-          <About />,
-        </HomeLayout>
-      </ProtectedRoutes>
-    ),
+    path: "/p",
+    element: <Outlet />,
+    children: [
+      {
+        path: ":id",
+        element: (
+          <ProtectedRoutes>
+            <HomeLayout>
+              <PostDetails />
+            </HomeLayout>
+          </ProtectedRoutes>
+        ),
+        loader: async () => {
+          const session = await getSession();
+          return session;
+        },
+        hydrateFallbackElement: <div />,
+      },
+      {
+        index: true,
+        element: <NotFound />,
+      },
+    ],
   },
   {
     path: "/signin",

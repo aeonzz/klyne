@@ -14,7 +14,7 @@ const port = process.env.PORT;
 app.use(
   cors({
     origin: process.env.APP_URL, // Replace with your frontend's origin
-    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Specify allowed HTTP methods
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );

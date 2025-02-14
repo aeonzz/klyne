@@ -4,6 +4,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 const authorize = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log(req.headers.cookie)
     const headers: any = {
       get: (key: string) => req.headers[key.toLowerCase()],
       set: (key: string, value: string) => {

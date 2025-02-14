@@ -26,6 +26,7 @@ model User {
   accounts      Account[]
   Post          Post[]
   Like          Like[]
+  Comment       Comment[]
 
   @@unique([email])
   @@map("user")
@@ -98,4 +99,13 @@ model Like {
 
   @@unique([userId, postId])
   @@map("like")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }

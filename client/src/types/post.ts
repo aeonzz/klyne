@@ -10,3 +10,15 @@ export type Post = {
   user: User;
   likes: Like[];
 };
+
+export type GetPosts = {
+  message: string;
+  data: Post[];
+  error: string | null;
+};
+
+export type GetPost = {
+  message: string;
+  data: Post;
+  error: string | null;
+};

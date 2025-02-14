@@ -1,46 +1,92 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import type { Like } from "@/types/like";
 import { Heart } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likePost } from "@/lib/api/post";
-import { useLoaderData } from "react-router";
-import type { PayloadSession } from "@/types/auth-type";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/get-error-message";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import type { Like } from "@/types/like";
+import UserLikeCard from "./user-liked-card";
 
 interface LikeButtonProps {
-  likes: Like[];
+  isLiked: boolean;
   postId: string;
+  userId: string;
+  queryKey: string;
+  likes: Like[];
 }
 
-export default function LikeButton({ likes, postId }: LikeButtonProps) {
-  const session: PayloadSession = useLoaderData();
-  const { id } = session.data.user;
-  const isLiked = likes.find((like) => like.userId === session.data.user.id);
+export default function LikeButton({
+  isLiked,
+  postId,
+  userId,
+  queryKey,
+  likes,
+}: LikeButtonProps) {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const [liked, setLiked] = React.useState(isLiked);
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: likePost,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
+
+  const handleLike = async (value: boolean) => {
+    try {
+      setLiked(value);
+      await mutateAsync({
+        postId,
+        userId: userId,
+        state: value,
+      });
+    } catch (error) {
+      console.log(error);
+      getErrorMessage(error);
+    }
+  };
+
   return (
     <div className="flex items-center">
       <Button
-        className="rounded-full hover:bg-pink-300/50 [&_svg]:size-6"
+        className="group rounded-full hover:bg-pink-400/50 [&_svg]:size-6"
         variant="ghost"
         size="icon"
         onClick={() => {
-          mutate({
-            postId,
-            userId: id,
-          });
+          handleLike(liked ? false : true);
         }}
-        disabled={isLiked !== undefined}
+        disabled={isPending}
       >
-        <Heart className={cn("ml-[0.3px]", isLiked && "fill-pink")} />
+        <Heart
+          className={cn(
+            "ml-[0.25px] group-hover:stroke-pink-500",
+            isLiked && "fill-pink-400 stroke-pink-400"
+          )}
+        />
       </Button>
-      <p className="text-sm text-muted-foreground">{likes.length}</p>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <p className="text-sm text-muted-foreground cursor-pointer hover:underline">{likes.length}</p>
+        </HoverCardTrigger>
+        <HoverCardContent className="shadow-none p-2">
+          {likes.length === 0 ? (
+            <div className="p-3 text-sm font-medium tracking-tight text-center">
+              No likes at the moment
+            </div>
+          ) : (
+            <React.Fragment>
+              {likes.map((like, index) => (
+                <UserLikeCard key={index} like={like} />
+              ))}
+            </React.Fragment>
+          )}
+        </HoverCardContent>
+      </HoverCard>
     </div>
   );
 }
