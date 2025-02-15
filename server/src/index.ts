@@ -5,11 +5,19 @@ import userRouter from "./routes/user.route";
 import postRouter from "./routes/post.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
+import { rateLimit } from "express-rate-limit";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+});
+
+app.use(limiter);
 
 app.use(
   cors({
