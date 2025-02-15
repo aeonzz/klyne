@@ -1,6 +1,5 @@
-import React from "react";
-import UserNav from "./user-nav";
 import { useSession } from "@/lib/auth-client";
+import UserNav from "./user-nav";
 
 export default function LoginWrapper() {
   const session = useSession();

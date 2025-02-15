@@ -12,7 +12,7 @@ export default function Feed() {
 
   if (isLoading) {
     return (
-      <div className="flex h-1/2 w-full items-center justify-center">
+      <div className="flex h-screen border-y w-full pt-40 justify-center">
         <Loader2 className="animate-spin" />
       </div>
     );

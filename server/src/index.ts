@@ -6,6 +6,8 @@ import postRouter from "./routes/post.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import { rateLimit } from "express-rate-limit";
+import { createRouteHandler } from "uploadthing/express";
+import { uploadRouter } from "./lib/uploadthing";
 
 dotenv.config();
 
@@ -14,10 +16,8 @@ const port = process.env.PORT;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 50,
+  max: 100,
 });
-
-app.use(limiter);
 
 app.use(
   cors({
@@ -27,12 +27,20 @@ app.use(
   })
 );
 
+// app.use(limiter);
+
 app.all("/api/auth/*", toNodeHandler(auth));
 
 app.use(express.json());
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/posts", postRouter);
+app.use(
+  "/api/v1/uploadthing",
+  createRouteHandler({
+    router: uploadRouter,
+  })
+);
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Server is working");

@@ -6,8 +6,8 @@ import SignIn from "@/pages/auth/signin";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import PostDetails from "@/pages/post";
+import { Loader2 } from "lucide-react";
 import { createBrowserRouter, Outlet } from "react-router";
-
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +23,11 @@ export const router = createBrowserRouter([
       const session = await getSession();
       return session;
     },
-    hydrateFallbackElement: <div />,
+    hydrateFallbackElement: (
+      <div className="flex h-screen w-full pt-56 justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    ),
   },
   {
     path: "/p",

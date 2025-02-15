@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
@@ -25,7 +24,7 @@ export default function PostCard({ post, index, queryKey }: PostCardProps) {
   return (
     <Card
       className={cn(
-        "border-x-0 p-3 shadow-none hover:bg-muted/30",
+        "border-x-0 p-3 shadow-none hover:bg-muted/30 rounded-none",
         index !== 0 && "border-t-0"
       )}
     >
@@ -70,7 +69,7 @@ export default function PostCard({ post, index, queryKey }: PostCardProps) {
         />
         <div className="flex items-center">
           <Button
-            className="rounded-full hover:bg-blue-300/50 [&_svg]:size-6"
+            className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
             variant="ghost"
             size="icon"
             onClick={() => {

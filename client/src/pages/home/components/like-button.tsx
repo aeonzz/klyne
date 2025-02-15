@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/hover-card";
 import type { Like } from "@/types/like";
 import UserLikeCard from "./user-liked-card";
+import NumberFlow from "@number-flow/react";
 
 interface LikeButtonProps {
   isLiked: boolean;
@@ -50,9 +51,9 @@ export default function LikeButton({
   };
 
   return (
-    <div className="flex items-center">
+    <div className="group flex items-center">
       <Button
-        className="group rounded-full hover:bg-red-500/50 [&_svg]:size-6"
+        className="group rounded-full hover:bg-pink-500/20 [&_svg]:size-5"
         variant="ghost"
         size="icon"
         onClick={() => {
@@ -62,18 +63,24 @@ export default function LikeButton({
       >
         <Heart
           className={cn(
-            "ml-[0.25px] group-hover:stroke-red-500",
-            isLiked && "fill-red-500 stroke-red-500"
+            "ml-[0.25px] group-hover:stroke-pink-500",
+            isLiked && "fill-pink-500 stroke-pink-500"
           )}
         />
       </Button>
       <HoverCard>
         <HoverCardTrigger asChild>
-          <p className="text-sm text-muted-foreground cursor-pointer hover:underline">{likes.length}</p>
+          <NumberFlow
+            willChange
+            className="cursor-pointer text-sm text-muted-foreground hover:underline group-hover:text-pink-500"
+            value={likes.length}
+            format={{ useGrouping: false }}
+            aria-hidden
+          />
         </HoverCardTrigger>
-        <HoverCardContent className="shadow-none p-2">
+        <HoverCardContent className="p-2 shadow-none">
           {likes.length === 0 ? (
-            <div className="p-3 text-sm font-medium tracking-tight text-center">
+            <div className="p-3 text-center text-sm font-medium tracking-tight">
               No likes at the moment
             </div>
           ) : (

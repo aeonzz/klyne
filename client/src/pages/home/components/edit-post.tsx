@@ -3,8 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -61,7 +59,6 @@ export default function EditPost({
     }
   };
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
@@ -73,9 +70,8 @@ export default function EditPost({
         <DropdownMenuContent
           className="shadow-none"
           onCloseAutoFocus={(e) => e.preventDefault()}
+          align="end"
         >
-          <DropdownMenuLabel>Settings</DropdownMenuLabel>
-          <DropdownMenuSeparator />
           <DialogTrigger asChild>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Pen />
@@ -91,6 +87,7 @@ export default function EditPost({
             </DialogHeader>
             <div>
               <Textarea
+                maxRows={10}
                 defaultValue={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Write post"
@@ -99,7 +96,9 @@ export default function EditPost({
             </div>
             <DialogFooter>
               <Button
-                disabled={postContent === content || isPending || content.length === 0}
+                disabled={
+                  postContent === content || isPending || content.length === 0
+                }
                 onClick={handleUpdate}
               >
                 {isPending && <Loader2 className="animate-spin" />}
