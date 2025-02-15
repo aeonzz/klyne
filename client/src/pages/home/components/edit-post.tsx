@@ -60,6 +60,8 @@ export default function EditPost({
       getErrorMessage(error);
     }
   };
+
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
@@ -80,13 +82,16 @@ export default function EditPost({
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
-          <DialogContent className="p-4">
+          <DialogContent
+            className="p-4"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
             <DialogHeader>
               <DialogTitle>Edit post</DialogTitle>
             </DialogHeader>
             <div>
               <Textarea
-                value={content}
+                defaultValue={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Write post"
                 className="resize-none !text-xl shadow-none"
@@ -94,7 +99,7 @@ export default function EditPost({
             </div>
             <DialogFooter>
               <Button
-                disabled={postContent === content || isPending}
+                disabled={postContent === content || isPending || content.length === 0}
                 onClick={handleUpdate}
               >
                 {isPending && <Loader2 className="animate-spin" />}

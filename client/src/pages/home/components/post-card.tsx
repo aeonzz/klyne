@@ -25,7 +25,7 @@ export default function PostCard({ post, index, queryKey }: PostCardProps) {
   return (
     <Card
       className={cn(
-        "border-x-0 p-3 shadow-none hover:bg-slate-100/30",
+        "border-x-0 p-3 shadow-none hover:bg-muted/30",
         index !== 0 && "border-t-0"
       )}
     >

@@ -13,11 +13,8 @@ export default function PostDetails() {
   const navigate = useNavigate();
 
   const { data, isError, isLoading } = useQuery<GetPost>({
-    queryKey: ["get-post-by-id", params],
-    queryFn: async () => {
-      const data = await getPost({ postId: params.id });
-      return data;
-    },
+    queryKey: [params.id],
+    queryFn: async () => await getPost({ postId: params.id })
   });
 
   if (isLoading) {
@@ -48,7 +45,7 @@ export default function PostDetails() {
       >
         <ChevronLeft />
       </Button>
-      <PostCard post={data.data} index={0} queryKey="get-post-by-id" />
+      <PostCard post={data.data} index={0} queryKey={params.id!} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import LoginWrapper from "@/components/login-wrapper";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Component } from "lucide-react";
 import React from "react";
 import { Link } from "react-router";
@@ -10,7 +11,10 @@ export default function NavBar() {
         <Link to="/">
           <Component className="size-6" />
         </Link>
-        <LoginWrapper />
+        <div className="flex items-center gap-2">
+          <ModeToggle />
+          <LoginWrapper />
+        </div>
       </nav>
     </header>
   );

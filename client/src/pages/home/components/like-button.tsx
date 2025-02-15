@@ -29,7 +29,6 @@ export default function LikeButton({
   likes,
 }: LikeButtonProps) {
   const queryClient = useQueryClient();
-  const [liked, setLiked] = React.useState(isLiked);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: likePost,
     onSuccess: () => {
@@ -39,7 +38,6 @@ export default function LikeButton({
 
   const handleLike = async (value: boolean) => {
     try {
-      setLiked(value);
       await mutateAsync({
         postId,
         userId: userId,
@@ -54,18 +52,18 @@ export default function LikeButton({
   return (
     <div className="flex items-center">
       <Button
-        className="group rounded-full hover:bg-pink-400/50 [&_svg]:size-6"
+        className="group rounded-full hover:bg-red-500/50 [&_svg]:size-6"
         variant="ghost"
         size="icon"
         onClick={() => {
-          handleLike(liked ? false : true);
+          handleLike(isLiked ? false : true);
         }}
         disabled={isPending}
       >
         <Heart
           className={cn(
-            "ml-[0.25px] group-hover:stroke-pink-500",
-            isLiked && "fill-pink-400 stroke-pink-400"
+            "ml-[0.25px] group-hover:stroke-red-500",
+            isLiked && "fill-red-500 stroke-red-500"
           )}
         />
       </Button>
