@@ -1,5 +1,3 @@
-"use client";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,29 +12,28 @@ import React from "react";
 import { Loader2, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
 import { signOut } from "@/lib/auth-client";
-import { useNavigate } from "react-router";
-import { Session } from "@/types/auth-type";
+import { useLoaderData, useNavigate } from "react-router";
+import { PayloadSession } from "@/types/auth-type";
 
-interface UserNavProps {
-  session: Session;
-}
-
-export default function UserNav({ session }: UserNavProps) {
+export default function UserNav() {
   const [isSignOut, setIsSignOut] = React.useState<boolean>(false);
   const navigate = useNavigate();
+  const session: PayloadSession = useLoaderData();
+
+  const { data } = session;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-8 cursor-pointer">
-          <AvatarImage src={session.user.image ?? ""} />
-          <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
+          <AvatarImage src={data.user.image ?? ""} />
+          <AvatarFallback>{data.user.name?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[200px] shadow-none">
         <DropdownMenuLabel className="flex flex-col">
-          {session.user.name}
+          {data.user.name}
           <span className="text-xs text-muted-foreground">
-            {session.user.email}
+            {data.user.email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

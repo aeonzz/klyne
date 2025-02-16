@@ -7,10 +7,10 @@ interface HomeLayoutProps {
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
-    <main>
-      <div className="flex h-auto min-h-screen w-full flex-col items-center pt-16">
+    <main className="min-h-screen">
+      <div className="flex h-screen w-full flex-col items-center pt-16">
         <NavBar />
-        <div className="w-full max-w-screen-sm border-x">{children}</div>
+        <div className="w-full max-w-screen-sm flex-1 border-x">{children}</div>
       </div>
     </main>
   );

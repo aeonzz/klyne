@@ -46,7 +46,11 @@ export const router = createBrowserRouter([
           const session = await getSession();
           return session;
         },
-        hydrateFallbackElement: <div />,
+        hydrateFallbackElement: (
+          <div className="flex h-screen w-full pt-56 justify-center">
+            <Loader2 className="animate-spin" />
+          </div>
+        ),
       },
       {
         index: true,

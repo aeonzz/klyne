@@ -12,7 +12,7 @@ export default function Feed() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen border-y w-full pt-40 justify-center">
+      <div className="flex h-screen w-full justify-center border-y pt-40">
         <Loader2 className="animate-spin" />
       </div>
     );
@@ -28,10 +28,10 @@ export default function Feed() {
 
   if (data.data.length === 0) {
     return (
-      <div className="flex h-1/2 w-full flex-col items-center justify-center gap-3">
+      <div className="flex h-screen w-full flex-col items-center gap-3 border-y pt-40">
         <CircleAlert className="size-9 text-muted-foreground" />
         <p className="text-sm font-medium tracking-tight text-muted-foreground">
-          Wala pay mga post tangina mo
+          Nothing to show here
         </p>
       </div>
     );
@@ -40,7 +40,12 @@ export default function Feed() {
   return (
     <>
       {data.data.map((post, index) => (
-        <PostCard key={index} post={post} index={index} queryKey="get-posts" />
+        <PostCard
+          key={post.createdAt.toString()}
+          post={post}
+          index={index}
+          queryKey="get-posts"
+        />
       ))}
     </>
   );
