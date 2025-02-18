@@ -9,6 +9,7 @@ export const createPostSchema = z.object({
   userId: z.string({
     required_error: "User id is required",
   }),
+  imageUrl: z.string().optional(),
 });
 
 export const likePostSchema = z.object({

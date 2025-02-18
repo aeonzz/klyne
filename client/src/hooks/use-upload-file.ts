@@ -30,10 +30,11 @@ export function useUploadFile(
   });
 
   const handleUpload = async (files: File[]) => {
-    if (files.length === 0) return;
+    if (files.length === 0) return [];
     setIsUploading(true);
     try {
-      await startUpload(files);
+      const result = await startUpload(files);
+      return result || [];
     } finally {
       setIsUploading(false);
     }

@@ -14,6 +14,7 @@ import { Loader2 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 import ImagePreview from "./image-preview";
+import { type ClientUploadedFileData } from "uploadthing/types";
 
 interface PostInputProps {
   session: {
@@ -34,7 +35,6 @@ export default function PostInput({ session }: PostInputProps) {
     {
       onSuccess: () => {
         alert("Upload successful!");
-        setFiles([]);
       },
       onError: () => alert("Upload failed!"),
     }
@@ -43,15 +43,22 @@ export default function PostInput({ session }: PostInputProps) {
   async function onSubmit() {
     setIsLoading(true);
     try {
-      await handleUpload(files);
-      console.log(uploadedFiles)
+      let uploadResult = [];
+
+      if (files.length > 0) {
+        uploadResult = await handleUpload(files);
+      }
       const payload: CreatePost = {
         content: content,
         userId: id,
+        imageUrl: uploadResult[0],
       };
-      // await createPost(payload);
+      console.log(uploadResult)
+      await createPost(payload);
       setContent("");
+      setFiles([]);
       setIsLoading(false);
+
       queryClient.invalidateQueries({ queryKey: ["get-posts"] });
       toast("Posted");
     } catch (error) {

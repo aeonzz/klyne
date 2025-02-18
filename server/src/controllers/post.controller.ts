@@ -10,11 +10,12 @@ import {
 
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { content, userId } = createPostSchema.parse(req.body);
+    const { content, userId, imageUrl } = createPostSchema.parse(req.body);
     const data = await db.post.create({
       data: {
         content,
         userId,
+        imageUrl,
       },
     });
     response({

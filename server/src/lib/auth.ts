@@ -1,6 +1,9 @@
 import { betterAuth } from "better-auth";
+import * as dotenv from "dotenv";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
+
+dotenv.config();
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
