@@ -38,6 +38,9 @@ export const createPost = async (req: Request, res: Response) => {
 export const getPosts = async (req: Request, res: Response) => {
   try {
     const data = await db.post.findMany({
+      where: {
+        deleted: false,
+      },
       include: {
         user: true,
         likes: {
@@ -111,6 +114,7 @@ export const getPost = async (req: Request, res: Response) => {
     const data = await db.post.findFirst({
       where: {
         id: req.params.id,
+        deleted: false,
       },
       include: {
         user: true,
@@ -141,13 +145,40 @@ export const getPost = async (req: Request, res: Response) => {
 
 export const updatePost = async (req: Request, res: Response) => {
   try {
-    const { content, postId } = updatePostSchema.parse(req.body);
+    const { content, postId, deleted } = updatePostSchema.parse(req.body);
     const data = await db.post.update({
       where: {
         id: postId,
       },
       data: {
         content,
+        deleted,
+      },
+    });
+
+    response({
+      res,
+      status: StatusCodes.ACCEPTED,
+      data,
+      error: null,
+    });
+  } catch (error) {
+    console.log(error);
+    response({
+      res,
+      status: StatusCodes.ACCEPTED,
+      data: null,
+      error: error,
+    });
+  }
+};
+
+export const deletePost = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const data = await db.post.delete({
+      where: {
+        id,
       },
     });
 

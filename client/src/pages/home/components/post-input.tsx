@@ -50,6 +50,8 @@ export default function PostInput({ session }: PostInputProps) {
         uploadResult = await handleUpload(files);
       }
 
+      console.log(uploadResult)
+
       const payload: CreatePost = {
         content: content,
         userId: id,
@@ -82,7 +84,7 @@ export default function PostInput({ session }: PostInputProps) {
             maxRows={8}
             maxLength={MAX_CONTENT}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Write something"
+            placeholder="Write something stupid..."
             className={cn(
               "min-h-[50px] resize-none border-none py-1 shadow-none focus-visible:ring-0",
               files.length > 0 ? "text-base" : "!text-xl placeholder:text-xl"

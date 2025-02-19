@@ -7,14 +7,14 @@ import type { Post } from "@/types/post";
 import { cn } from "@/lib/utils";
 import LikeButton from "./like-button";
 import type { PayloadSession } from "@/types/auth-type";
-import { useLoaderData, Link, useNavigate } from "react-router";
-import EditPost from "./edit-post";
+import { useLoaderData, useNavigate } from "react-router";
+import PostActions from "./post-actions";
 
 interface PostCardProps {
   post: Post;
   index: number;
   queryKey: string;
-  isLastPost: boolean;
+  isLastPost?: boolean;
 }
 
 export default function PostCard({
@@ -30,13 +30,16 @@ export default function PostCard({
   return (
     <Card
       className={cn(
-        "rounded-none border-x-0 p-3 shadow-none hover:bg-muted/30",
+        "cursor-pointer rounded-none border-x-0 p-3 shadow-none hover:bg-muted/30",
         index !== 0 && "border-t-0",
         isLastPost && "mb-5"
       )}
+      onClick={() => {
+        navigate(`/p/${post.id}`);
+      }}
     >
       <div className="flex">
-        <Link to={`/p/${post.id}`} className="flex flex-grow gap-3">
+        <div className="flex flex-grow gap-3">
           <Avatar className="size-8 cursor-pointer">
             <AvatarImage src={post.user.image ?? ""} />
             <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
@@ -49,8 +52,8 @@ export default function PostCard({
               {formatDistanceToNow(post.createdAt, { addSuffix: true })}
             </p>
           </div>
-        </Link>
-        <EditPost
+        </div>
+        <PostActions
           postId={post.id}
           postContent={post.content}
           queryKey={queryKey}
@@ -61,7 +64,7 @@ export default function PostCard({
       >
         <h2
           className={cn(
-            "break-all font-normal text-xs",
+            "break-all text-xs font-normal",
             post.content.length > 50 && post.imageUrl ? "text-base" : "text-xl"
           )}
         >
@@ -71,7 +74,8 @@ export default function PostCard({
           <div
             className={cn(
               "grid h-[512px] grid-cols-2 grid-rows-2 gap-1 overflow-hidden rounded-lg",
-              post.imageUrl.length === 1 && "grid-cols-1 grid-rows-1"
+              post.imageUrl.length === 1 && "grid-cols-1 grid-rows-1",
+              post.imageUrl.length === 2 && "h-[256px] grid-cols-2 grid-rows-1"
             )}
           >
             {post.imageUrl.map((url, index) => (
@@ -81,7 +85,7 @@ export default function PostCard({
                 loading="lazy"
                 alt={`${url}${index}`}
                 className={cn(
-                  "aspect-square h-full w-full object-cover",
+                  "aspect-square h-full w-full object-cover transition-all hover:brightness-75",
                   post.imageUrl.length === 3 && index === 2 && "col-span-2"
                 )}
               />

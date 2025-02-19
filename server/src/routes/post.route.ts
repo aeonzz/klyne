@@ -1,6 +1,7 @@
 import * as express from "express";
 import {
   createPost,
+  deletePost,
   getPost,
   getPosts,
   likePost,
@@ -10,6 +11,7 @@ import authorize from "../middlewares/auth-middleware";
 import { validateData } from "../middlewares/validation-middleware";
 import {
   createPostSchema,
+  deletePostSchema,
   likePostSchema,
   updatePostSchema,
 } from "../schemas/post.schema";
@@ -25,5 +27,12 @@ postRouter.post("/like", authorize, validateData(likePostSchema), likePost);
 postRouter.get("/:id", authorize, getPost);
 
 postRouter.patch("/:id", authorize, validateData(updatePostSchema), updatePost);
+
+postRouter.delete(
+  "/:id",
+  authorize,
+  validateData(deletePostSchema),
+  deletePost
+);
 
 export default postRouter;

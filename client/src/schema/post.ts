@@ -35,7 +35,9 @@ export const editPost = z.object({
     })
     .min(1, "Atleast 1 character")
     .max(100, "Maximum of 100 characters"),
+  deleted: z.boolean().optional(),
 });
+
 
 export type CreatePost = z.infer<typeof createPost>;
 export type LikePost = z.infer<typeof likePost>;

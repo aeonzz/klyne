@@ -37,7 +37,11 @@ export default function LikeButton({
     },
   });
 
-  const handleLike = async (value: boolean) => {
+  const handleLike = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    value: boolean
+  ) => {
+    e.stopPropagation();
     try {
       await mutateAsync({
         postId,
@@ -51,13 +55,16 @@ export default function LikeButton({
   };
 
   return (
-    <div className="group flex items-center">
+    <div
+      className="group flex items-center"
+      onClick={(e) => e.stopPropagation()}
+    >
       <Button
         className="group rounded-full hover:bg-pink-500/20 [&_svg]:size-5"
         variant="ghost"
         size="icon"
-        onClick={() => {
-          handleLike(isLiked ? false : true);
+        onClick={(e) => {
+          handleLike(e, isLiked ? false : true);
         }}
         disabled={isPending}
       >

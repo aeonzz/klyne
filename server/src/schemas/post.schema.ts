@@ -33,8 +33,16 @@ export const updatePostSchema = z.object({
       required_error: "Content is required",
     })
     .min(1, "Atleast 1 character"),
+  deleted: z.boolean().optional(),
+});
+
+export const deletePostSchema = z.object({
+  delete: z.boolean({
+    required_error: "Field required",
+  }),
 });
 
 export type LikePostSchema = z.infer<typeof likePostSchema>;
 export type CreatePostSchema = z.infer<typeof createPostSchema>;
 export type UpdatePostSchema = z.infer<typeof updatePostSchema>;
+export type DeletePostSchema = z.infer<typeof deletePostSchema>;

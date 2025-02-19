@@ -53,3 +53,4 @@ export async function editPost(payload: EditPost) {
   );
   return response.data;
 }
+

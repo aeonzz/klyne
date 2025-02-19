@@ -81,6 +81,7 @@ model Post {
   id        String   @id @default(uuid())
   imageUrl  String[]
   content   String
+  deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   userId    String
