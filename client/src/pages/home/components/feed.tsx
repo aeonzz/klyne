@@ -45,6 +45,7 @@ export default function Feed() {
           post={post}
           index={index}
           queryKey="get-posts"
+          isLastPost={index === data.data.length - 1}
         />
       ))}
     </>

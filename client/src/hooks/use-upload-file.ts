@@ -21,10 +21,11 @@ export function useUploadFile(
       setUploadedFiles(file);
       options?.onSuccess?.();
     },
-    onUploadError: () => {
+    onUploadError: (error) => {
+      console.log(error)
       options?.onError?.();
     },
-    onUploadBegin: ({ file }) => {
+    onUploadBegin: (file) => {
       console.log("Upload has begun for", file);
     },
   });

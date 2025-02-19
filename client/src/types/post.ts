@@ -6,6 +6,7 @@ export type Post = {
   content: string;
   createdAt: Date;
   updatedAt: Date;
+  imageUrl: string[];
   userId: string;
   user: User;
   likes: Like[];

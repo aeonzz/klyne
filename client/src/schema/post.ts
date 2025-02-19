@@ -5,11 +5,12 @@ export const createPost = z.object({
     .string({
       required_error: "Content is required",
     })
-    .min(1, "Atleast 1 character"),
+    .min(1, "Atleast 1 character")
+    .max(60, "Maximum of 60 character"),
   userId: z.string({
     required_error: "User id is required",
   }),
-  imageUrl: z.string().optional(),
+  imageUrl: z.array(z.string()).optional(),
 });
 
 export const likePost = z.object({
@@ -32,7 +33,8 @@ export const editPost = z.object({
     .string({
       required_error: "Content is required",
     })
-    .min(1, "Atleast 1 character"),
+    .min(1, "Atleast 1 character")
+    .max(100, "Maximum of 100 characters"),
 });
 
 export type CreatePost = z.infer<typeof createPost>;

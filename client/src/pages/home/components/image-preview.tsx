@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import React from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ImagePreviewProps {
   file: File[];
@@ -15,21 +22,25 @@ export default function ImagePreview({
   fileInputRef,
 }: ImagePreviewProps) {
   const [urls, setUrls] = React.useState<string[]>([]);
-  const prevUrlsRef = React.useRef<string[]>([]);
+  const urlsRef = React.useRef<string[]>([]);
 
   React.useEffect(() => {
+    // Cleanup previous URLs before creating new ones
+    urlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+
+    // Create new URLs
     const newUrls = file.map((f) => URL.createObjectURL(f));
-
-    prevUrlsRef.current = urls;
-
     setUrls(newUrls);
+    urlsRef.current = newUrls;
 
+    // Cleanup on unmount or when files change
     return () => {
-      prevUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      newUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [file]);
 
   const handleRemove = (indexToRemove: number) => {
+    URL.revokeObjectURL(urls[indexToRemove]);
     onValueChange((prev) => {
       const newFiles = prev.filter((_, index) => index !== indexToRemove);
       if (fileInputRef.current) {
@@ -44,32 +55,51 @@ export default function ImagePreview({
   }
 
   return (
-    <div className="grid place-items-center">
-      {urls.map((url, index) => (
-        <div key={url} className="group relative">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute right-2 top-2 rounded-full [&_svg]:size-5"
-            onClick={() => {
-              handleRemove(index);
-            }}
+    <Carousel
+      opts={{
+        align: "start",
+      }}
+      className="w-full"
+    >
+      <CarouselContent className="-ml-1">
+        {urls.map((url, index) => (
+          <CarouselItem
+            key={url}
+            className={cn("pl-1", urls.length > 1 ? "basis-1/2" : "basis-full")}
           >
-            <X />
-          </Button>
-          <img
-            src={url}
-            alt={`Preview ${index + 1}`}
-            className={cn("size-auto w-full rounded-lg object-cover")}
-          />
-          {/* <div className="mt-2 truncate text-sm text-gray-600">
-            {file[index].name}
-          </div>
-          <div className="text-xs text-gray-400">
-            {(file[index].size / 1024 / 1024).toFixed(2)}MB
-          </div> */}
-        </div>
-      ))}
-    </div>
+            <div className="p-1">
+              <div
+                className={cn(
+                  "group relative w-full overflow-hidden rounded-lg",
+                  urls.length === 1 ? "h-[512px]" : "h-64"
+                )}
+              >
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute right-2 top-2 z-10 size-8 rounded-full [&_svg]:size-4"
+                  onClick={() => {
+                    handleRemove(index);
+                  }}
+                >
+                  <X />
+                </Button>
+                <img
+                  src={url}
+                  alt={`Preview ${index + 1}`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      {urls.length > 1 && (
+        <>
+          <CarouselPrevious />
+          <CarouselNext />
+        </>
+      )}
+    </Carousel>
   );
 }

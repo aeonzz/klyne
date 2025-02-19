@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 export const validateData = (schema: z.ZodObject<any, any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log(req)
       schema.parse(req.body);
       next();
     } catch (error) {

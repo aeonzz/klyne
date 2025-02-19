@@ -12,7 +12,7 @@ export default function NavBar() {
         </Link>
         <div className="flex items-center gap-2">
           <ModeToggle />
-          {/* <UserNav /> */}
+          <UserNav />
         </div>
       </nav>
     </header>

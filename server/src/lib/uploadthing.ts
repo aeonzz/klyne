@@ -11,7 +11,7 @@ export const uploadRouter = {
        * @see https://docs.uploadthing.com/file-routes#route-config
        */
       maxFileSize: "4MB",
-      maxFileCount: 1,
+      maxFileCount: 4,
     },
   }).onUploadComplete((data) => {
     console.log("upload completed", data);

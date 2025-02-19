@@ -14,9 +14,15 @@ interface PostCardProps {
   post: Post;
   index: number;
   queryKey: string;
+  isLastPost: boolean;
 }
 
-export default function PostCard({ post, index, queryKey }: PostCardProps) {
+export default function PostCard({
+  post,
+  index,
+  queryKey,
+  isLastPost,
+}: PostCardProps) {
   const navigate = useNavigate();
   const session: PayloadSession = useLoaderData();
   const { id } = session.data.user;
@@ -24,8 +30,9 @@ export default function PostCard({ post, index, queryKey }: PostCardProps) {
   return (
     <Card
       className={cn(
-        "border-x-0 p-3 shadow-none hover:bg-muted/30 rounded-none",
-        index !== 0 && "border-t-0"
+        "rounded-none border-x-0 p-3 shadow-none hover:bg-muted/30",
+        index !== 0 && "border-t-0",
+        isLastPost && "mb-5"
       )}
     >
       <div className="flex">
@@ -49,15 +56,38 @@ export default function PostCard({ post, index, queryKey }: PostCardProps) {
           queryKey={queryKey}
         />
       </div>
-      <CardContent className="pt-1">
+      <CardContent
+        className={cn("flex flex-col gap-3 pt-1", post.imageUrl && "pb-1")}
+      >
         <h2
           className={cn(
-            "font-medium break-all",
-            post.content.length > 50 ? "text-md" : "text-4xl"
+            "break-all font-normal text-xs",
+            post.content.length > 50 && post.imageUrl ? "text-base" : "text-xl"
           )}
         >
           {post.content}
         </h2>
+        {post.imageUrl.length > 0 && (
+          <div
+            className={cn(
+              "grid h-[512px] grid-cols-2 grid-rows-2 gap-1 overflow-hidden rounded-lg",
+              post.imageUrl.length === 1 && "grid-cols-1 grid-rows-1"
+            )}
+          >
+            {post.imageUrl.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                loading="lazy"
+                alt={`${url}${index}`}
+                className={cn(
+                  "aspect-square h-full w-full object-cover",
+                  post.imageUrl.length === 3 && index === 2 && "col-span-2"
+                )}
+              />
+            ))}
+          </div>
+        )}
       </CardContent>
       <div className="z-50 flex w-full items-center gap-5 px-5">
         <LikeButton
