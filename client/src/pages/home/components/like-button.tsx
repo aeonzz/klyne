@@ -78,7 +78,6 @@ export default function LikeButton({
       <HoverCard>
         <HoverCardTrigger asChild>
           <NumberFlow
-            willChange
             className="cursor-pointer text-sm text-muted-foreground hover:underline group-hover:text-pink-500"
             value={likes.length}
             format={{ useGrouping: false }}

@@ -10,6 +10,8 @@ export const createPostSchema = z.object({
     required_error: "User id is required",
   }),
   imageUrl: z.array(z.string()).optional(),
+  replyToId: z.string().optional(),
+  quoteOfId: z.string().optional(),
 });
 
 export const likePostSchema = z.object({
@@ -36,13 +38,6 @@ export const updatePostSchema = z.object({
   deleted: z.boolean().optional(),
 });
 
-export const deletePostSchema = z.object({
-  delete: z.boolean({
-    required_error: "Field required",
-  }),
-});
-
 export type LikePostSchema = z.infer<typeof likePostSchema>;
 export type CreatePostSchema = z.infer<typeof createPostSchema>;
 export type UpdatePostSchema = z.infer<typeof updatePostSchema>;
-export type DeletePostSchema = z.infer<typeof deletePostSchema>;

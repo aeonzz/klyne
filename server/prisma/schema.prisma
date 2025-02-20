@@ -26,7 +26,6 @@ model User {
   accounts      Account[]
   Post          Post[]
   Like          Like[]
-  Comment       Comment[]
 
   @@unique([email])
   @@map("user")
@@ -77,16 +76,40 @@ model Verification {
   @@map("verification")
 }
 
+// model Post {
+//   id        String    @id @default(uuid())
+//   imageUrl  String[]
+//   content   String
+//   deleted   Boolean   @default(false)
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @default(now())
+//   userId    String
+//   user      User      @relation(fields: [userId], references: [id])
+//   likes     Like[]
+
+//   @@map("post")
+// }
+
 model Post {
   id        String   @id @default(uuid())
-  imageUrl  String[]
   content   String
+  imageUrl  String[]
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  replyToId String?  
+  replyTo   Post?    @relation("Replies", fields: [replyToId], references: [id])
+  replies   Post[]   @relation("Replies")
+
   likes     Like[]
+  
+  quoteOfId String?
+  quoteOf   Post?   @relation("Quotes", fields: [quoteOfId], references: [id])
+  quotes    Post[]  @relation("Quotes")
 
   @@map("post")
 }
@@ -101,15 +124,4 @@ model Like {
 
   @@unique([userId, postId])
   @@map("like")
-}
-
-model Comment {
-  id        String   @id @default(uuid())
-  content   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@map("comment")
 }

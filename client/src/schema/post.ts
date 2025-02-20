@@ -11,6 +11,8 @@ export const createPost = z.object({
     required_error: "User id is required",
   }),
   imageUrl: z.array(z.string()).optional(),
+  replyToId: z.string().optional(),
+  quoteOfId: z.string().optional(),
 });
 
 export const likePost = z.object({
@@ -37,7 +39,6 @@ export const editPost = z.object({
     .max(100, "Maximum of 100 characters"),
   deleted: z.boolean().optional(),
 });
-
 
 export type CreatePost = z.infer<typeof createPost>;
 export type LikePost = z.infer<typeof likePost>;

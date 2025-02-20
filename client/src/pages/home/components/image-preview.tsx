@@ -14,26 +14,25 @@ interface ImagePreviewProps {
   file: File[];
   onValueChange: React.Dispatch<React.SetStateAction<File[]>>;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
+  disabled: boolean;
 }
 
 export default function ImagePreview({
   file,
   onValueChange,
   fileInputRef,
+  disabled,
 }: ImagePreviewProps) {
   const [urls, setUrls] = React.useState<string[]>([]);
   const urlsRef = React.useRef<string[]>([]);
 
   React.useEffect(() => {
-    // Cleanup previous URLs before creating new ones
     urlsRef.current.forEach((url) => URL.revokeObjectURL(url));
 
-    // Create new URLs
     const newUrls = file.map((f) => URL.createObjectURL(f));
     setUrls(newUrls);
     urlsRef.current = newUrls;
 
-    // Cleanup on unmount or when files change
     return () => {
       newUrls.forEach((url) => URL.revokeObjectURL(url));
     };
@@ -81,6 +80,7 @@ export default function ImagePreview({
                   onClick={() => {
                     handleRemove(index);
                   }}
+                  disabled={disabled}
                 >
                   <X />
                 </Button>

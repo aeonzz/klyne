@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Ellipsis, Loader2, Pen, Trash } from "lucide-react";
+import { EllipsisVertical, Loader2, Pen, Trash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -80,8 +80,12 @@ export default function PostActions({
       <Dialog open={open} onOpenChange={setOpen}>
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Ellipsis />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-3 top-3 size-7"
+            >
+              <EllipsisVertical />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent

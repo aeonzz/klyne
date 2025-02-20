@@ -172,29 +172,3 @@ export const updatePost = async (req: Request, res: Response) => {
     });
   }
 };
-
-export const deletePost = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const data = await db.post.delete({
-      where: {
-        id,
-      },
-    });
-
-    response({
-      res,
-      status: StatusCodes.ACCEPTED,
-      data,
-      error: null,
-    });
-  } catch (error) {
-    console.log(error);
-    response({
-      res,
-      status: StatusCodes.ACCEPTED,
-      data: null,
-      error: error,
-    });
-  }
-};

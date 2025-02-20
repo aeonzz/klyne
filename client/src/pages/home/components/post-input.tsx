@@ -21,11 +21,17 @@ interface PostInputProps {
   session: {
     data: Session;
   };
+  placeholder?: string;
+  replyToUsername?: string;
 }
 
 const MAX_CONTENT = 150;
 
-export default function PostInput({ session }: PostInputProps) {
+export default function PostInput({
+  session,
+  replyToUsername,
+  placeholder = "Write something stupid...",
+}: PostInputProps) {
   const [files, setFiles] = React.useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
@@ -49,8 +55,6 @@ export default function PostInput({ session }: PostInputProps) {
       if (files.length > 0) {
         uploadResult = await handleUpload(files);
       }
-
-      console.log(uploadResult)
 
       const payload: CreatePost = {
         content: content,
@@ -79,12 +83,18 @@ export default function PostInput({ session }: PostInputProps) {
           <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div className="flex w-full flex-col">
+          <div className="px-3 flex items-center gap-1 text-xs font-light ">
+            <h4 className="text-muted-foreground">
+              Replying to
+            </h4>
+            <p className="text-blue-500">@{replyToUsername}</p>
+          </div>
           <Textarea
             value={content}
             maxRows={8}
             maxLength={MAX_CONTENT}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Write something stupid..."
+            placeholder={placeholder}
             className={cn(
               "min-h-[50px] resize-none border-none py-1 shadow-none focus-visible:ring-0",
               files.length > 0 ? "text-base" : "!text-xl placeholder:text-xl"
@@ -95,9 +105,10 @@ export default function PostInput({ session }: PostInputProps) {
               file={files}
               onValueChange={setFiles}
               fileInputRef={fileInputRef}
+              disabled={isLoading}
             />
           )}
-          <div className="flex items-center justify-between mt-2">
+          <div className="mt-2 flex items-center justify-between">
             <FileUploader
               value={files}
               // handleUpload={handleUpload}
@@ -111,12 +122,14 @@ export default function PostInput({ session }: PostInputProps) {
               <CircularProgress
                 value={progressPercent}
                 thumbColor={
-                  content.length === MAX_CONTENT ? "text-destructive" : undefined
+                  content.length === MAX_CONTENT
+                    ? "text-destructive"
+                    : undefined
                 }
                 className="size-6"
               />
               <Button
-                className="ml-auto w-fit"
+                className="ml-auto w-fit text-white"
                 onClick={onSubmit}
                 disabled={!content || isLoading}
                 variant="accent"
