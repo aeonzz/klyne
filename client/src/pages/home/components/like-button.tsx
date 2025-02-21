@@ -55,12 +55,9 @@ export default function LikeButton({
   };
 
   return (
-    <div
-      className="group flex items-center"
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
       <Button
-        className="group rounded-full hover:bg-pink-500/20 [&_svg]:size-5"
+        className="group peer rounded-full hover:bg-pink-500/20 [&_svg]:size-5"
         variant="ghost"
         size="icon"
         onClick={(e) => {
@@ -78,7 +75,7 @@ export default function LikeButton({
       <HoverCard>
         <HoverCardTrigger asChild>
           <NumberFlow
-            className="cursor-pointer text-sm text-muted-foreground hover:underline group-hover:text-pink-500"
+            className="cursor-pointer text-sm text-muted-foreground hover:underline peer-hover:text-pink-500"
             value={likes.length}
             format={{ useGrouping: false }}
             aria-hidden

@@ -14,7 +14,7 @@ export const uploadRouter = {
       maxFileCount: 4,
     },
   }).onUploadComplete((data) => {
-    console.log("upload completed", data);
+    // console.log("upload completed", data);
   }),
 } satisfies FileRouter;
 

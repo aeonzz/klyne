@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Loader2, X } from "lucide-react";
 import {
@@ -12,7 +13,6 @@ import type { GetPost } from "@/types/post";
 import { getPost } from "@/lib/api/post";
 import { Params } from "@/types/params";
 import PostInput from "../home/components/post-input";
-import { Separator } from "@/components/ui/separator";
 
 export default function PostDetails() {
   const params = useParams<Params>();
@@ -62,11 +62,7 @@ export default function PostDetails() {
         size="icon"
         className="m-3 [&_svg]:size-5"
         onClick={() => {
-          if (isReplying) {
-            navigate(-1);
-            return;
-          }
-          navigate("/");
+          navigate(-1);
         }}
       >
         {isReplying ? <X /> : <ChevronLeft />}
@@ -85,7 +81,19 @@ export default function PostDetails() {
         replyToId={data.data.id}
         isReplying={isReplying}
       />
-      <Separator />
+      {!isReplying && (
+        <React.Fragment>
+          {data.data.replies.map((reply, index) => (
+            <PostCard
+              key={reply.createdAt.toString()}
+              post={reply}
+              index={index}
+              queryKey={id}
+              isReplying={isReplying}
+            />
+          ))}
+        </React.Fragment>
+      )}
     </main>
   );
 }

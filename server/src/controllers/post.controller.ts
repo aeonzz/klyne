@@ -51,6 +51,19 @@ export const getPosts = async (req: Request, res: Response) => {
             user: true,
           },
         },
+        replies: {
+          where: {
+            deleted: false,
+          },
+          include: {
+            user: true,
+            likes: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -126,7 +139,38 @@ export const getPost = async (req: Request, res: Response) => {
             user: true,
           },
         },
-        replies: true
+        replies: {
+          where: {
+            deleted: false,
+          },
+          include: {
+            user: true,
+            likes: {
+              include: {
+                user: true,
+              },
+            },
+            replies: {
+              where: {
+                deleted: false,
+              },
+              include: {
+                user: true,
+                likes: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "desc",
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 

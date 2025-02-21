@@ -120,11 +120,11 @@ export default function PostCard({
         )}
         <div className="z-50 grid w-full grid-cols-5 pr-2">
           <div
-            className="group flex items-center"
+            className="flex items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
+              className="group peer rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
               variant="ghost"
               size="icon"
               onClick={() => {
@@ -133,14 +133,16 @@ export default function PostCard({
             >
               <MessageCircle className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
             </Button>
-            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
+            <p className="cursor-pointer text-sm text-muted-foreground peer-hover:text-blue-500">
+              {post.replies.length}
+            </p>
           </div>
           <div
-            className="group flex items-center"
+            className="flex items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="rounded-full hover:bg-blue-500/20 [&_svg]:size-6"
+              className="group peer rounded-full hover:bg-blue-500/20 [&_svg]:size-6"
               variant="ghost"
               size="icon"
               onClick={() => {
@@ -149,7 +151,7 @@ export default function PostCard({
             >
               <Repeat2 className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
             </Button>
-            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
+            <p className="cursor-pointer text-sm text-muted-foreground peer-hover:text-blue-500"></p>
           </div>
           <LikeButton
             isLiked={!!isLiked}
@@ -159,17 +161,17 @@ export default function PostCard({
             queryKey={queryKey}
           />
           <div
-            className="group flex items-center"
+            className="flex items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
+              className="group peer rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
               variant="ghost"
               size="icon"
             >
               <Bookmark className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
             </Button>
-            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
+            <p className="cursor-pointer text-sm text-muted-foreground peer-hover:text-blue-500"></p>
           </div>
           <div className="ml-auto">
             <div

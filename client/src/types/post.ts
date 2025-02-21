@@ -10,6 +10,7 @@ export type Post = {
   userId: string;
   user: User;
   likes: Like[];
+  replies: Post[];
 };
 
 export type GetPosts = {

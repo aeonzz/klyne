@@ -126,39 +126,37 @@ export default function PostInput({
               disabled={isLoading}
             />
           )}
-          {isPostView && isReplying && (
-            <div className="mt-2 flex items-center justify-between">
-              <FileUploader
-                value={files}
-                // handleUpload={handleUpload}
-                onValueChange={setFiles}
-                disabled={isUploading}
-                isUploading={isUploading}
-                fileInputRef={fileInputRef}
-                maxFiles={4}
+          <div className="mt-2 flex items-center justify-between">
+            <FileUploader
+              value={files}
+              // handleUpload={handleUpload}
+              onValueChange={setFiles}
+              disabled={isUploading}
+              isUploading={isUploading}
+              fileInputRef={fileInputRef}
+              maxFiles={4}
+            />
+            <div className="flex items-center gap-3">
+              <CircularProgress
+                value={progressPercent}
+                thumbColor={
+                  content.length === MAX_CONTENT
+                    ? "text-destructive"
+                    : undefined
+                }
+                className="size-6"
               />
-              <div className="flex items-center gap-3">
-                <CircularProgress
-                  value={progressPercent}
-                  thumbColor={
-                    content.length === MAX_CONTENT
-                      ? "text-destructive"
-                      : undefined
-                  }
-                  className="size-6"
-                />
-                <Button
-                  className="ml-auto w-fit text-white"
-                  onClick={onSubmit}
-                  disabled={!content || isLoading}
-                  variant="accent"
-                >
-                  {isLoading && <Loader2 className="animate-spin" />}
-                  Post
-                </Button>
-              </div>
+              <Button
+                className="ml-auto w-fit text-white"
+                onClick={onSubmit}
+                disabled={!content || isLoading}
+                variant="accent"
+              >
+                {isLoading && <Loader2 className="animate-spin" />}
+                Post
+              </Button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </Card>
