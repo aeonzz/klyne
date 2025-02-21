@@ -12,6 +12,7 @@
     "start": "vite preview --port 3000"
   },
   "dependencies": {
+    "@ferrucc-io/emoji-picker": "^0.0.42",
     "@hookform/resolvers": "^3.10.0",
     "@number-flow/react": "^0.5.5",
     "@radix-ui/react-alert-dialog": "^1.1.6",

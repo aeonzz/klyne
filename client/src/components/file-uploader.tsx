@@ -54,7 +54,7 @@ export default function FileUploader({
         accept="image/png, image/jpeg, image/jpg"
         disabled={disabled || isUploading || value?.length === maxFiles}
       />
-      <Image className="size-5 text-primary" />
+      <Image className="text-primary" />
     </Button>
   );
 }

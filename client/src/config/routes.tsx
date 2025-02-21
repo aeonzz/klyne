@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
     },
     hydrateFallbackElement: (
       <div className="flex h-screen w-full pt-56 justify-center">
-        <Loader2 className="animate-spin" />
+        <Loader2 className="animate-spin text-primary" />
       </div>
     ),
   },

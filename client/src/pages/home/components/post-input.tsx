@@ -17,6 +17,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { useLocation, useNavigate } from "react-router";
+import EmojiPicker from "./e-picker";
 
 interface PostInputProps {
   session: {
@@ -127,15 +128,18 @@ export default function PostInput({
             />
           )}
           <div className="mt-2 flex items-center justify-between">
-            <FileUploader
-              value={files}
-              // handleUpload={handleUpload}
-              onValueChange={setFiles}
-              disabled={isUploading}
-              isUploading={isUploading}
-              fileInputRef={fileInputRef}
-              maxFiles={4}
-            />
+            <div>
+              <FileUploader
+                value={files}
+                // handleUpload={handleUpload}
+                onValueChange={setFiles}
+                disabled={isUploading}
+                isUploading={isUploading}
+                fileInputRef={fileInputRef}
+                maxFiles={4}
+              />
+              <EmojiPicker setContent={setContent} />
+            </div>
             <div className="flex items-center gap-3">
               <CircularProgress
                 value={progressPercent}
