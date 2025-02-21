@@ -1,3 +1,4 @@
+import MenuSidebar from "@/components/menu-sidebar";
 import NavBar from "@/pages/home/components/nav-bar";
 import React from "react";
 
@@ -8,9 +9,15 @@ interface HomeLayoutProps {
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
     <main className="min-h-screen">
-      <div className="flex h-screen w-full flex-col items-center pt-14">
-        <NavBar />
-        <div className="w-full max-w-screen-sm flex-1 border-t border-x">{children}</div>
+      <div className="flex h-screen w-full flex-col items-center">
+        <div className="flex w-full">
+          <MenuSidebar />
+          <div className="flex-1 border-x border-t">
+            <NavBar />
+            <div className="border-t">{children}</div>
+          </div>
+          <div className="flex-1"></div>
+        </div>
       </div>
     </main>
   );

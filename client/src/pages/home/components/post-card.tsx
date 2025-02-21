@@ -145,16 +145,16 @@ export default function PostCard({
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="group peer rounded-full hover:bg-blue-500/20 [&_svg]:size-6"
+              className="group peer rounded-full hover:bg-green-500/20 [&_svg]:size-5"
               variant="ghost"
               size="icon"
               onClick={() => {
                 navigate(`/p/${post.id}?r=true`);
               }}
             >
-              <Repeat2 className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
+              <Repeat2 className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-green-500" />
             </Button>
-            <p className="cursor-pointer text-sm text-muted-foreground peer-hover:text-blue-500"></p>
+            <p className="cursor-pointer text-sm text-muted-foreground peer-hover:text-green-500"></p>
           </div>
           <LikeButton
             isLiked={!!isLiked}

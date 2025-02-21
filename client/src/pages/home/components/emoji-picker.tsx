@@ -5,76 +5,59 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { EmojiPicker as EmojiPickerPrimitive } from "@ferrucc-io/emoji-picker";
-import type { BaseEmojiPickerProps } from "@/types/emoji";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Smile } from "lucide-react";
 
-function EmojiPicker({
-  children,
-  ...props
-}: React.ComponentProps<typeof Popover>) {
-  return <Popover {...props}>{children}</Popover>;
+interface EmojiPickerProps {
+  setContent: (updater: (prevContent: string) => string) => void;
+  disabled: boolean;
 }
 
-function EmojiPickerTrigger({
-  children,
-  ref,
-  className,
-  ...props
-}: React.ComponentProps<typeof PopoverTrigger>) {
-  return (
-    <PopoverTrigger ref={ref} className={className} {...props}>
-      {children}
-    </PopoverTrigger>
+export default function EmojiPicker({
+  setContent,
+  disabled,
+}: EmojiPickerProps) {
+  const handleEmojiSelect = React.useCallback(
+    (emoji: string) => {
+      setContent((prevContent) => prevContent + emoji);
+    },
+    [setContent]
   );
-}
-
-function EmojiPickerContent({
-  ...props
-}: React.ComponentProps<typeof PopoverContent> & BaseEmojiPickerProps) {
-  const {
-    onEmojiSelect,
-    emojisPerRow = 9,
-    emojiSize = 28,
-    maxUnicodeVersion,
-    ...rest
-  } = props;
-  const { className, ref, ...popoverProps } = rest;
-
-  const baseEmojiProps: BaseEmojiPickerProps = {
-    onEmojiSelect,
-    emojisPerRow,
-    emojiSize,
-    maxUnicodeVersion,
-  };
-  const popoverContentProps: React.ComponentProps<typeof PopoverContent> = {
-    className,
-    ref,
-    ...popoverProps,
-  };
 
   return (
-    <PopoverContent
-      ref={popoverContentProps.ref}
-      className={cn("w-auto p-2", popoverContentProps.className)}
-      {...popoverProps}
-    >
-      <EmojiPickerPrimitive className="border-none w-[300px]" {...baseEmojiProps}>
-        <EmojiPickerPrimitive.Header className="">
-          <EmojiPickerPrimitive.Input
-            placeholder="Search emoji"
-            autoFocus={true}
-            className="border !bg-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          />
-        </EmojiPickerPrimitive.Header>
-        <EmojiPickerPrimitive.Group>
-          <EmojiPickerPrimitive.List
-            hideStickyHeader={true}
-            containerHeight={320}
-          />
-        </EmojiPickerPrimitive.Group>
-      </EmojiPickerPrimitive>
-    </PopoverContent>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          className="rounded-full hover:bg-primary/20 [&_svg]:size-5"
+          variant="ghost"
+          size="icon"
+          disabled={disabled}
+        >
+          <Smile className="text-primary" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-3" align="start">
+        <EmojiPickerPrimitive
+          className="w-[300px] border-none"
+          emojisPerRow={6}
+          emojiSize={40}
+          onEmojiSelect={handleEmojiSelect}
+        >
+          <EmojiPickerPrimitive.Header className="p-0 pb-3">
+            <EmojiPickerPrimitive.Input
+              placeholder="Search emoji"
+              autoFocus={true}
+              className="border !bg-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </EmojiPickerPrimitive.Header>
+          <EmojiPickerPrimitive.Group>
+            <EmojiPickerPrimitive.List
+              hideStickyHeader={true}
+              containerHeight={320}
+            />
+          </EmojiPickerPrimitive.Group>
+        </EmojiPickerPrimitive>
+      </PopoverContent>
+    </Popover>
   );
 }
-
-export { EmojiPicker, EmojiPickerTrigger, EmojiPickerContent };
