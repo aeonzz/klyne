@@ -10,12 +10,14 @@ import {
 
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { content, userId, imageUrl } = createPostSchema.parse(req.body);
+    const { content, userId, imageUrl, replyToId, quoteOfId } =
+      createPostSchema.parse(req.body);
     const data = await db.post.create({
       data: {
         content,
         userId,
         imageUrl,
+        replyToId,
       },
     });
     response({
@@ -39,6 +41,7 @@ export const getPosts = async (req: Request, res: Response) => {
   try {
     const data = await db.post.findMany({
       where: {
+        replyToId: null,
         deleted: false,
       },
       include: {
@@ -123,6 +126,7 @@ export const getPost = async (req: Request, res: Response) => {
             user: true,
           },
         },
+        replies: true
       },
     });
 

@@ -16,6 +16,7 @@ import { type ClientUploadedFileData } from "uploadthing/types";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CircularProgress } from "@/components/ui/circular-progress";
+import { useLocation, useNavigate } from "react-router";
 
 interface PostInputProps {
   session: {
@@ -23,6 +24,9 @@ interface PostInputProps {
   };
   placeholder?: string;
   replyToUsername?: string;
+  replyToId?: string;
+  queryKey: string[];
+  isReplying?: boolean;
 }
 
 const MAX_CONTENT = 150;
@@ -30,8 +34,13 @@ const MAX_CONTENT = 150;
 export default function PostInput({
   session,
   replyToUsername,
+  replyToId,
+  queryKey,
+  isReplying,
   placeholder = "Write something stupid...",
 }: PostInputProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [files, setFiles] = React.useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
@@ -39,6 +48,7 @@ export default function PostInput({
   const [content, setContent] = React.useState<string>("");
   const { image, name, id } = session.data.user;
   const progressPercent = Math.min((content.length / MAX_CONTENT) * 100, 100);
+  const isPostView = location.pathname.startsWith("/p");
 
   const { handleUpload, isUploading } = useUploadFile("imageUploader", {
     onError: () => {
@@ -57,16 +67,19 @@ export default function PostInput({
       }
 
       const payload: CreatePost = {
-        content: content,
         userId: id,
+        content,
+        replyToId,
         imageUrl: uploadResult.map((url) => url.ufsUrl),
       };
       await createPost(payload);
       setContent("");
       setFiles([]);
       setIsLoading(false);
-
-      queryClient.invalidateQueries({ queryKey: ["get-posts"] });
+      if (isReplying) {
+        navigate(`/p/${replyToId}`);
+      }
+      queryClient.invalidateQueries({ queryKey: queryKey });
       toast("Posted");
     } catch (error) {
       console.log(error);
@@ -83,15 +96,20 @@ export default function PostInput({
           <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div className="flex w-full flex-col">
-          <div className="px-3 flex items-center gap-1 text-xs font-light ">
-            <h4 className="text-muted-foreground">
-              Replying to
-            </h4>
-            <p className="text-blue-500">@{replyToUsername}</p>
-          </div>
+          {replyToUsername && (
+            <div className="flex items-center gap-1 px-3 text-xs font-light">
+              <h4 className="text-muted-foreground">Replying to</h4>
+              <p className="text-blue-500">@{replyToUsername}</p>
+            </div>
+          )}
           <Textarea
             value={content}
             maxRows={8}
+            onClick={() => {
+              if (isPostView) {
+                navigate(`/p/${replyToId}?r=true`);
+              }
+            }}
             maxLength={MAX_CONTENT}
             onChange={(e) => setContent(e.target.value)}
             placeholder={placeholder}
@@ -108,37 +126,39 @@ export default function PostInput({
               disabled={isLoading}
             />
           )}
-          <div className="mt-2 flex items-center justify-between">
-            <FileUploader
-              value={files}
-              // handleUpload={handleUpload}
-              onValueChange={setFiles}
-              disabled={isUploading}
-              isUploading={isUploading}
-              fileInputRef={fileInputRef}
-              maxFiles={4}
-            />
-            <div className="flex items-center gap-3">
-              <CircularProgress
-                value={progressPercent}
-                thumbColor={
-                  content.length === MAX_CONTENT
-                    ? "text-destructive"
-                    : undefined
-                }
-                className="size-6"
+          {isPostView && isReplying && (
+            <div className="mt-2 flex items-center justify-between">
+              <FileUploader
+                value={files}
+                // handleUpload={handleUpload}
+                onValueChange={setFiles}
+                disabled={isUploading}
+                isUploading={isUploading}
+                fileInputRef={fileInputRef}
+                maxFiles={4}
               />
-              <Button
-                className="ml-auto w-fit text-white"
-                onClick={onSubmit}
-                disabled={!content || isLoading}
-                variant="accent"
-              >
-                {isLoading && <Loader2 className="animate-spin" />}
-                Post
-              </Button>
+              <div className="flex items-center gap-3">
+                <CircularProgress
+                  value={progressPercent}
+                  thumbColor={
+                    content.length === MAX_CONTENT
+                      ? "text-destructive"
+                      : undefined
+                  }
+                  className="size-6"
+                />
+                <Button
+                  className="ml-auto w-fit text-white"
+                  onClick={onSubmit}
+                  disabled={!content || isLoading}
+                  variant="accent"
+                >
+                  {isLoading && <Loader2 className="animate-spin" />}
+                  Post
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </Card>

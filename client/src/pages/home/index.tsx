@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <PostInput session={session} />
+      <PostInput session={session} queryKey={["get-posts"]} />
       <Feed />
     </React.Fragment>
   );

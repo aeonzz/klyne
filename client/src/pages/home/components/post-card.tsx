@@ -1,14 +1,16 @@
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDistanceToNowStrict } from "date-fns";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react";
+import { Bookmark, MessageCircle, Repeat2, Share } from "lucide-react";
 import type { Post } from "@/types/post";
 import { cn } from "@/lib/utils";
 import LikeButton from "./like-button";
 import type { PayloadSession } from "@/types/auth-type";
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import PostActions from "./post-actions";
+import { Separator } from "@/components/ui/separator";
 
 interface PostCardProps {
   post: Post;
@@ -25,10 +27,12 @@ export default function PostCard({
   isLastPost,
   isReplying = false,
 }: PostCardProps) {
+  const location = useLocation();
   const navigate = useNavigate();
   const session: PayloadSession = useLoaderData();
   const { id } = session.data.user;
   const isLiked = post.likes.find((like) => like.userId === id);
+  const isPostView = location.pathname.startsWith("/p");
   return (
     <Card
       className={cn(
@@ -37,24 +41,26 @@ export default function PostCard({
         isLastPost && "mb-5",
         isReplying &&
           (post.imageUrl.length === 0
-            ? "h-[calc(100vh_-_90vh)] cursor-auto border-b-0 hover:bg-transparent pb-0"
-            : "h-[calc(100vh_-_70vh)] cursor-auto border-b-0 hover:bg-transparent pb-0")
+            ? "h-[calc(100vh_-_90vh)] cursor-auto border-b-0 pb-0 hover:bg-transparent"
+            : "h-[calc(100vh_-_70vh)] cursor-auto border-b-0 pb-0 hover:bg-transparent")
       )}
       onClick={() => {
-        navigate(`/p/${post.id}`);
+        if (!isReplying) {
+          navigate(`/p/${post.id}`);
+        }
       }}
     >
-      {/* {isReplying && (
+      {isReplying && (
         <div className="absolute bottom-0 left-0 z-10 h-full w-full bg-gradient-to-t from-background from-10% to-transparent" />
-      )} */}
-      <div className="flex flex-col items-center">
+      )}
+      <div className="flex flex-col items-center gap-3">
         <Avatar className="size-8 cursor-pointer">
           <AvatarImage src={post.user.image ?? ""} />
           <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
         </Avatar>
-        <div className="bg-muted h-full w-[1px] z-20" />
+        {isReplying && <div className="z-20 h-full w-[1px] bg-border" />}
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-2">
         <div className="flex items-start">
           <div className="flex flex-grow items-center gap-2">
             <h3 className="text-medium text-sm tracking-tight">
@@ -102,9 +108,19 @@ export default function PostCard({
             </div>
           )}
         </CardContent>
-        <div className="z-50 flex w-full items-center gap-5">
+        {isPostView && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-1.5 text-sm font-light text-muted-foreground">
+              <p>{format(post.createdAt, "p")}</p>
+              <div className="size-[2px] rounded-full bg-muted-foreground" />
+              <p>{format(post.createdAt, "PP")}</p>
+            </div>
+            <Separator />
+          </div>
+        )}
+        <div className="z-50 grid w-full grid-cols-5 pr-2">
           <div
-            className="flex items-center"
+            className="group flex items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Button
@@ -115,11 +131,25 @@ export default function PostCard({
                 navigate(`/p/${post.id}?r=true`);
               }}
             >
-              <MessageCircle className="mb-[2px] ml-[0.5px]" />
+              <MessageCircle className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
             </Button>
-            <p className="cursor-pointer text-sm text-muted-foreground hover:underline">
-              1
-            </p>
+            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
+          </div>
+          <div
+            className="group flex items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button
+              className="rounded-full hover:bg-blue-500/20 [&_svg]:size-6"
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                navigate(`/p/${post.id}?r=true`);
+              }}
+            >
+              <Repeat2 className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
+            </Button>
+            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
           </div>
           <LikeButton
             isLiked={!!isLiked}
@@ -128,6 +158,33 @@ export default function PostCard({
             likes={post.likes}
             queryKey={queryKey}
           />
+          <div
+            className="group flex items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button
+              className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
+              variant="ghost"
+              size="icon"
+            >
+              <Bookmark className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
+            </Button>
+            <p className="cursor-pointer text-sm text-muted-foreground group-hover:text-blue-500"></p>
+          </div>
+          <div className="ml-auto">
+            <div
+              className="group flex items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button
+                className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
+                variant="ghost"
+                size="icon"
+              >
+                <Share className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </Card>

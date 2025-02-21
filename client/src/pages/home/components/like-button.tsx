@@ -70,7 +70,7 @@ export default function LikeButton({
       >
         <Heart
           className={cn(
-            "ml-[0.25px] group-hover:stroke-pink-500",
+            "ml-[0.25px] text-muted-foreground group-hover:stroke-pink-500",
             isLiked && "fill-pink-500 stroke-pink-500"
           )}
         />

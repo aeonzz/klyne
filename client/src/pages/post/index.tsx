@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2, X } from "lucide-react";
 import {
   useLoaderData,
   useNavigate,
@@ -12,22 +12,35 @@ import type { GetPost } from "@/types/post";
 import { getPost } from "@/lib/api/post";
 import { Params } from "@/types/params";
 import PostInput from "../home/components/post-input";
+import { Separator } from "@/components/ui/separator";
 
 export default function PostDetails() {
   const params = useParams<Params>();
   const [searchParams] = useSearchParams();
   const session = useLoaderData();
   const navigate = useNavigate();
+  const { id } = params;
 
   const { data, isError, isLoading } = useQuery<GetPost>({
     queryKey: [params.id],
     queryFn: async () => await getPost({ postId: params.id }),
+    enabled: !!id,
   });
+  console.log(data);
+
+  if (!id) {
+    return (
+      <div className="flex h-1/2 w-full flex-col items-center justify-center gap-4">
+        <p>Post not found</p>
+        <Button onClick={() => navigate(-1)}>Go back</Button>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
       <div className="flex h-1/2 w-full items-center justify-center">
-        <Loader2 className="animate-spin" />
+        <Loader2 className="animate-spin text-blue-500" />
       </div>
     );
   }
@@ -40,27 +53,39 @@ export default function PostDetails() {
     );
   }
 
+  const isReplying = searchParams.get("r") === "true";
+
   return (
-    <div>
+    <main className="h-auto">
       <Button
         variant="ghost"
         size="icon"
-        className="m-3 [&_svg]:size-7"
+        className="m-3 [&_svg]:size-5"
         onClick={() => {
-          navigate(-1);
+          if (isReplying) {
+            navigate(-1);
+            return;
+          }
+          navigate("/");
         }}
       >
-        <ChevronLeft />
+        {isReplying ? <X /> : <ChevronLeft />}
       </Button>
       <PostCard
         post={data.data}
         index={0}
-        queryKey={params.id!}
-        isReplying={searchParams.get("r") === "true"}
+        queryKey={id}
+        isReplying={isReplying}
       />
-      {searchParams.get("r") === "true" && (
-        <PostInput placeholder="Post your reply" session={session} replyToUsername={data.data.user.name} />
-      )}
-    </div>
+      <PostInput
+        placeholder="Post your reply"
+        session={session}
+        queryKey={[id]}
+        replyToUsername={data.data.user.name}
+        replyToId={data.data.id}
+        isReplying={isReplying}
+      />
+      <Separator />
+    </main>
   );
 }

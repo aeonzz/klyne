@@ -13,7 +13,7 @@ export default function Feed() {
   if (isLoading) {
     return (
       <div className="flex h-screen w-full justify-center border-y pt-40">
-        <Loader2 className="animate-spin" />
+        <Loader2 className="animate-spin text-blue-500" />
       </div>
     );
   }
