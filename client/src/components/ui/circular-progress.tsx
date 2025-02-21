@@ -5,14 +5,15 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 
 import { cn } from "@/lib/utils";
 
-interface CircularProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+interface CircularProgressProps
+  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   thumbColor?: string;
 }
 
 const CircularProgress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   CircularProgressProps
->(({ className, value, thumbColor = "text-blue-500", ...props }, ref) => (
+>(({ className, value, thumbColor = "text-primary", ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
     className={cn("relative h-24 w-24", className)}

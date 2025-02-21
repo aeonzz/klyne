@@ -38,7 +38,7 @@ export default function FileUploader({
 
   return (
     <Button
-      className="rounded-full hover:bg-blue-500/20 [&_svg]:size-5"
+      className="rounded-full hover:bg-primary/20 [&_svg]:size-5"
       variant="ghost"
       size="icon"
       onClick={handleClick}
@@ -54,7 +54,7 @@ export default function FileUploader({
         accept="image/png, image/jpeg, image/jpg"
         disabled={disabled || isUploading || value?.length === maxFiles}
       />
-      <Image className="size-5 text-blue-500" />
+      <Image className="size-5 text-primary" />
     </Button>
   );
 }

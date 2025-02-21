@@ -40,7 +40,7 @@ export default function PostDetails() {
   if (isLoading) {
     return (
       <div className="flex h-1/2 w-full items-center justify-center">
-        <Loader2 className="animate-spin text-blue-500" />
+        <Loader2 className="animate-spin text-primary" />
       </div>
     );
   }

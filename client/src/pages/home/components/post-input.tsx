@@ -150,7 +150,6 @@ export default function PostInput({
                 className="ml-auto w-fit text-white"
                 onClick={onSubmit}
                 disabled={!content || isLoading}
-                variant="accent"
               >
                 {isLoading && <Loader2 className="animate-spin" />}
                 Post

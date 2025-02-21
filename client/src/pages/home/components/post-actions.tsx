@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { EllipsisVertical, Loader2, Pen, Trash } from "lucide-react";
+import { EllipsisVertical, Loader2, Pen, Share, Trash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -36,12 +36,14 @@ interface PostActionsProps {
   postId: string;
   postContent: string;
   queryKey: string;
+  isAuthor: boolean;
 }
 
 export default function PostActions({
   postId,
   postContent,
   queryKey,
+  isAuthor,
 }: PostActionsProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
@@ -93,16 +95,18 @@ export default function PostActions({
             onCloseAutoFocus={(e) => e.preventDefault()}
             align="end"
           >
-            <DialogTrigger asChild>
-              <DropdownMenuItem
-                onSelect={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <Pen />
-                Edit
-              </DropdownMenuItem>
-            </DialogTrigger>
+            {!isAuthor && (
+              <DialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <Pen />
+                  Edit
+                </DropdownMenuItem>
+              </DialogTrigger>
+            )}
             <DialogContent
               className="p-4"
               onOpenAutoFocus={(e) => e.preventDefault()}
@@ -131,38 +135,50 @@ export default function PostActions({
                 </Button>
               </DialogFooter>
             </DialogContent>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Share />
+              Share
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  onSelect={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <Trash />
-                  Delete
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-              <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    the post.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <Button
-                    onClick={() => handleUpdate(true)}
-                    disabled={isPending}
+            {!isAuthor && (
+              <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                    }}
                   >
-                    {isPending && <Loader2 className="animate-spin" />}
-                    Continue
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    <Trash />
+                    Delete
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the post.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button
+                      onClick={() => handleUpdate(true)}
+                      disabled={isPending}
+                    >
+                      {isPending && <Loader2 className="animate-spin" />}
+                      Continue
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </Dialog>

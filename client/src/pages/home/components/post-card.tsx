@@ -33,6 +33,8 @@ export default function PostCard({
   const { id } = session.data.user;
   const isLiked = post.likes.find((like) => like.userId === id);
   const isPostView = location.pathname.startsWith("/p");
+  const isAuthor = id === post.id;
+
   return (
     <Card
       className={cn(
@@ -75,6 +77,7 @@ export default function PostCard({
             postId={post.id}
             postContent={post.content}
             queryKey={queryKey}
+            isAuthor={isAuthor}
           />
         </div>
         <CardContent
