@@ -1,7 +1,6 @@
 import { menu } from "@/config/menu";
 import { cn } from "@/lib/utils";
 import { Component } from "lucide-react";
-import React from "react";
 import { NavLink } from "react-router";
 import { buttonVariants } from "./ui/button";
 import UserNav from "./user-nav";
