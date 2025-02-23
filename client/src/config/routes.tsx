@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
     ),
     loader: async () => {
       const session = await getSession();
+      console.log(session, "wtf");
       return session;
     },
     hydrateFallbackElement: (
