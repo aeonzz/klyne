@@ -6,6 +6,7 @@ import SignIn from "@/pages/auth/signin";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import PostDetails from "@/pages/post";
+import PostNav from "@/pages/post/_components/post-nav";
 import { Loader2 } from "lucide-react";
 import { createBrowserRouter, Outlet } from "react-router";
 
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
       return session;
     },
     hydrateFallbackElement: (
-      <div className="flex h-screen w-full pt-56 justify-center">
+      <div className="flex h-screen w-full justify-center pt-56">
         <Loader2 className="animate-spin text-primary" />
       </div>
     ),
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
         path: ":id",
         element: (
           <ProtectedRoutes>
-            <HomeLayout>
+            <HomeLayout navBar={<PostNav />}>
               <PostDetails />
             </HomeLayout>
           </ProtectedRoutes>
@@ -47,8 +48,8 @@ export const router = createBrowserRouter([
           return session;
         },
         hydrateFallbackElement: (
-          <div className="flex h-screen w-full pt-56 justify-center">
-            <Loader2 className="animate-spin" />
+          <div className="flex h-screen w-full justify-center pt-56">
+            <Loader2 className="animate-spin text-primary" />
           </div>
         ),
       },

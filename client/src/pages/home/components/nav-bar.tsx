@@ -1,20 +1,25 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import UserNav from "@/components/user-nav";
-import { Component } from "lucide-react";
-import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
+import TopBarLayout from "@/layouts/top-bar-layout";
 
 export default function NavBar() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="flex items-center justify-between rounded-lg px-5 h-14">
-        <Link to="/">
-          <Component className="size-6" />
-        </Link>
-        <div className="flex items-center gap-2">
-          <ModeToggle />
-          <UserNav />
-        </div>
-      </nav>
-    </header>
+    <TopBarLayout>
+      <div className="flex h-full w-full items-center">
+        <Button
+          variant="ghost"
+          className="h-full grow rounded-none p-0 hover:bg-accent/30"
+        >
+          <span className="relative inline-flex h-full items-center overflow-hidden before:absolute before:bottom-0 before:h-1 before:w-full before:rounded-full before:bg-primary">
+            For you
+          </span>
+        </Button>
+        <Button
+          variant="ghost"
+          className="h-full grow rounded-none p-0 hover:bg-accent/30"
+        >
+          Following
+        </Button>
+      </div>
+    </TopBarLayout>
   );
 }

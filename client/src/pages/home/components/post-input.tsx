@@ -16,7 +16,6 @@ import { type ClientUploadedFileData } from "uploadthing/types";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CircularProgress } from "@/components/ui/circular-progress";
-import { useLocation, useNavigate } from "react-router";
 import EmojiPicker from "./emoji-picker";
 
 interface PostInputProps {
@@ -27,7 +26,6 @@ interface PostInputProps {
   replyToUsername?: string;
   replyToId?: string;
   queryKey: string[];
-  isReplying?: boolean;
 }
 
 const MAX_CONTENT = 150;
@@ -37,11 +35,8 @@ export default function PostInput({
   replyToUsername,
   replyToId,
   queryKey,
-  isReplying,
   placeholder = "Write something stupid...",
 }: PostInputProps) {
-  const location = useLocation();
-  const navigate = useNavigate();
   const [files, setFiles] = React.useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
@@ -49,7 +44,6 @@ export default function PostInput({
   const [content, setContent] = React.useState<string>("");
   const { image, name, id } = session.data.user;
   const progressPercent = Math.min((content.length / MAX_CONTENT) * 100, 100);
-  const isPostView = location.pathname.startsWith("/p");
 
   const { handleUpload, isUploading } = useUploadFile("imageUploader", {
     onError: () => {
@@ -77,9 +71,6 @@ export default function PostInput({
       setContent("");
       setFiles([]);
       setIsLoading(false);
-      if (isReplying) {
-        navigate(`/p/${replyToId}`);
-      }
       queryClient.invalidateQueries({ queryKey: queryKey });
       toast("Posted");
     } catch (error) {
@@ -90,7 +81,7 @@ export default function PostInput({
   }
 
   return (
-    <Card className="border-none shadow-none">
+    <Card className="rounded-none border-x-0 border-b border-t-0 shadow-none">
       <div className="flex p-3">
         <Avatar className="size-9">
           <AvatarImage src={image ?? undefined} />
@@ -106,11 +97,6 @@ export default function PostInput({
           <Textarea
             value={content}
             maxRows={8}
-            onClick={() => {
-              if (isPostView) {
-                navigate(`/p/${replyToId}?r=true`);
-              }
-            }}
             maxLength={MAX_CONTENT}
             onChange={(e) => setContent(e.target.value)}
             placeholder={placeholder}
@@ -151,7 +137,7 @@ export default function PostInput({
                 className="size-6"
               />
               <Button
-                className="ml-auto w-fit text-white"
+                className="ml-auto w-fit rounded-full text-white"
                 onClick={onSubmit}
                 disabled={!content || isLoading}
               >

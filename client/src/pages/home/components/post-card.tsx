@@ -17,7 +17,7 @@ interface PostCardProps {
   index: number;
   queryKey: string;
   isLastPost?: boolean;
-  isReplying?: boolean;
+  isParentPost?: boolean;
 }
 
 export default function PostCard({
@@ -25,53 +25,61 @@ export default function PostCard({
   index,
   queryKey,
   isLastPost,
-  isReplying = false,
+  isParentPost = false,
 }: PostCardProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const session: PayloadSession = useLoaderData();
   const { id } = session.data.user;
   const isLiked = post.likes.find((like) => like.userId === id);
-  const isPostView = location.pathname.startsWith("/p");
+  const isPostView = location.pathname.startsWith("/p") && isParentPost;
   const isAuthor = id === post.id;
 
   return (
     <Card
       className={cn(
-        "relative flex cursor-pointer gap-3 overflow-hidden rounded-none border-x-0 p-3 shadow-none hover:bg-muted/30",
-        index !== 0 && "border-t-0",
+        "relative flex gap-3 overflow-hidden rounded-none border-x-0 p-3 shadow-none",
+        index !== 0 ? "border-b-0" : "border-y-0",
         isLastPost && "mb-5",
-        isReplying &&
-          (post.imageUrl.length === 0
-            ? "h-[calc(100vh_-_90vh)] cursor-auto border-b-0 pb-0 hover:bg-transparent"
-            : "h-[calc(100vh_-_70vh)] cursor-auto border-b-0 pb-0 hover:bg-transparent")
+        !isPostView && "cursor-pointer hover:bg-muted/20"
       )}
       onClick={() => {
-        if (!isReplying) {
+        if (!isPostView) {
           navigate(`/p/${post.id}`);
         }
       }}
     >
-      {isReplying && (
-        <div className="absolute bottom-0 left-0 z-10 h-full w-full bg-gradient-to-t from-background from-10% to-transparent" />
-      )}
-      <div className="flex flex-col items-center gap-3">
+      {!isPostView && (
         <Avatar className="size-8 cursor-pointer">
           <AvatarImage src={post.user.image ?? ""} />
           <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
         </Avatar>
-        {isReplying && <div className="z-20 h-full w-[1px] bg-border" />}
-      </div>
+      )}
       <div className="w-full space-y-2">
         <div className="flex items-start">
-          <div className="flex flex-grow items-center gap-2">
+          <div
+            className={cn(
+              "flex flex-grow gap-2",
+              isPostView ? "items-start" : "items-center"
+            )}
+          >
+            {isPostView && (
+              <Avatar className="size-8 cursor-pointer">
+                <AvatarImage src={post.user.image ?? ""} />
+                <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            )}
             <h3 className="text-medium text-sm tracking-tight">
               {post.user.name}
             </h3>
-            <div className="size-1 rounded-full bg-muted-foreground" />
-            <p className="text-sm font-light text-muted-foreground">
-              {formatDistanceToNowStrict(post.createdAt)}
-            </p>
+            {!isPostView && (
+              <React.Fragment>
+                <div className="size-1 rounded-full bg-muted-foreground" />
+                <p className="text-xs font-light text-muted-foreground">
+                  {formatDistanceToNowStrict(post.createdAt)}
+                </p>
+              </React.Fragment>
+            )}
           </div>
           <PostActions
             postId={post.id}
@@ -101,6 +109,7 @@ export default function PostCard({
                   key={index}
                   src={url}
                   loading="lazy"
+                  decoding="async"
                   alt={`${url}${index}`}
                   className={cn(
                     "aspect-square h-full w-full object-cover transition-all hover:brightness-75",
@@ -131,7 +140,7 @@ export default function PostCard({
               variant="ghost"
               size="icon"
               onClick={() => {
-                navigate(`/p/${post.id}?r=true`);
+                navigate(`/p/${post.id}`);
               }}
             >
               <MessageCircle className="mb-[2px] ml-[0.5px] text-muted-foreground group-hover:stroke-blue-500" />
@@ -191,6 +200,7 @@ export default function PostCard({
             </div>
           </div>
         </div>
+        {isPostView && <Separator />}
       </div>
     </Card>
   );

@@ -1,12 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Loader2, X } from "lucide-react";
-import {
-  useLoaderData,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router";
+import { Loader2 } from "lucide-react";
+import { useLoaderData, useNavigate, useParams } from "react-router";
 import PostCard from "../home/components/post-card";
 import { useQuery } from "@tanstack/react-query";
 import type { GetPost } from "@/types/post";
@@ -16,7 +11,6 @@ import PostInput from "../home/components/post-input";
 
 export default function PostDetails() {
   const params = useParams<Params>();
-  const [searchParams] = useSearchParams();
   const session = useLoaderData();
   const navigate = useNavigate();
   const { id } = params;
@@ -26,74 +20,55 @@ export default function PostDetails() {
     queryFn: async () => await getPost({ postId: params.id }),
     enabled: !!id,
   });
-  console.log(data);
-
-  if (!id) {
-    return (
-      <div className="flex h-1/2 w-full flex-col items-center justify-center gap-4">
-        <p>Post not found</p>
-        <Button onClick={() => navigate(-1)}>Go back</Button>
-      </div>
-    );
-  }
 
   if (isLoading) {
     return (
-      <div className="flex h-1/2 w-full items-center justify-center">
+      <div className="flex h-screen w-full justify-center pt-40">
         <Loader2 className="animate-spin text-primary" />
       </div>
     );
   }
 
-  if (isError || !data?.data) {
+  if (!id || !data?.data) {
     return (
-      <div className="flex h-1/2 w-full items-center justify-center">
-        Error bugok
+      <div className="flex h-screen w-full flex-col justify-center gap-2 pt-40">
+        <p className="text-sm text-muted-foreground">Post is not available.</p>
+        <Button onClick={() => navigate(-1)}>Go back</Button>
       </div>
     );
   }
 
-  const isReplying = searchParams.get("r") === "true";
+  if (isError) {
+    return (
+      <div className="flex h-screen w-full justify-center pt-40">
+        <p className="text-sm text-muted-foreground">
+          Something went wrong. Try again later
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <main className="h-auto">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="m-3 [&_svg]:size-5"
-        onClick={() => {
-          navigate(-1);
-        }}
-      >
-        {isReplying ? <X /> : <ChevronLeft />}
-      </Button>
-      <PostCard
-        post={data.data}
-        index={0}
-        queryKey={id}
-        isReplying={isReplying}
-      />
+    <main className="min-h-[170vh]">
+      <PostCard post={data.data} index={0} queryKey={id} isParentPost />
       <PostInput
         placeholder="Post your reply"
         session={session}
         queryKey={[id]}
         replyToUsername={data.data.user.name}
         replyToId={data.data.id}
-        isReplying={isReplying}
       />
-      {!isReplying && (
-        <React.Fragment>
-          {data.data.replies.map((reply, index) => (
-            <PostCard
-              key={reply.createdAt.toString()}
-              post={reply}
-              index={index}
-              queryKey={id}
-              isReplying={isReplying}
-            />
-          ))}
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        {data.data.replies.map((reply, index) => (
+          <PostCard
+            key={reply.createdAt.toString()}
+            post={reply}
+            index={index}
+            queryKey={id}
+            isLastPost={index === data.data.replies.length - 1}
+          />
+        ))}
+      </React.Fragment>
     </main>
   );
 }
